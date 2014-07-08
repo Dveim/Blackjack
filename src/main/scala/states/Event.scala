@@ -7,15 +7,17 @@ package states
 sealed trait Event
 
 object Event {
-  def getEvent = io.StdIn.readLine("Please, make your move : \n").toLowerCase match {
+  def getEvent = io.StdIn.readLine("Please, make your move: \n").toLowerCase match {
     case "start" => Start
     case "deal" => Deal
+    case "hit" => Hit
+    case "stand" => Stand
     case _ => NotRecognized
   }
 }
 
 object Start extends Event
-
 object Deal extends Event
-
+object Hit extends Event
+object Stand extends Event
 object NotRecognized extends Event
