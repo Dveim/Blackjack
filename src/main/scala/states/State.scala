@@ -239,7 +239,7 @@ trait SplitS extends Transition {
         val rightCards = fillHand(_cash, 2 * bet, shoe, List(shoe.getCard, playerCards(1)), dealerCards)
 
         // dealers takes cards
-        // dealer doesn't look at player cards, so let's start from left hand
+        // dealer doesn't look at player's cards, so let's start from left hand
         var game: Transition = new State(0, bet, shoe, leftCards, dealerCards) with StandS
         var newDealerCards: List[Card] = dealerCards
         println("Left hand result:")
