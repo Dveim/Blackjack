@@ -4,6 +4,11 @@ import cards._
 import Event.getEvent
 import io.StdIn.readInt
 
+/**
+ * Main class for FSM. Combination of case class and trait instead of single trait
+ * is used to get some benefits like copy() and therefore reduce code duplication
+ */
+
 case class State(cash: Int,
                  bet: Int,
                  shoe: Shoe,
@@ -36,6 +41,10 @@ case class State(cash: Int,
         aces.foldLeft(sumOfOther)((res, _) => if (res < 11) res + 11 else res + 1)
     }
 }
+
+/**
+ * Handles FSM states changes
+ */
 
 sealed trait Transition extends State {
     def _transit: Transition
@@ -74,7 +83,13 @@ trait StartS extends Transition {
             val dealerCard = shoe.getCard
             val playerCard2 = shoe.getCard
 
-            new State(
+            // blackjack can be only in start
+            if (getScore(playerCard1 :: playerCard2 :: Nil) == 21) {
+                println(s"Blackjack! $playerCard1  $playerCard2")
+                new State(cash + 3 * _bet / 2, 0, shoe, Nil, Nil) with StartS
+            }
+
+            else new State(
                 cash - _bet,
                 bet + _bet,
                 shoe,
@@ -92,8 +107,6 @@ trait StartS extends Transition {
 }
 
 trait DealS extends Transition {
-    // todo add blackjack (10 + 11)
-    // todo add double
     override def stateEvent = Deal
 
     def isAfterStart = false
@@ -114,6 +127,23 @@ trait DealS extends Transition {
         case Stand =>
             new State(copy()) with StandS
 
+        case Double =>
+            if (cash < bet) {
+                println("Sorry, not enough money for double")
+                this
+            }
+
+            else if (getScore(playerCards) > 10) {
+                println("Sorry, you can double only if score < 11")
+                this
+            }
+
+            else {
+                val newPlayerCard = shoe.getCard
+                println(s"You get $newPlayerCard,  total score is ${getScore(newPlayerCard :: playerCards)}")
+                new State(cash - bet, 2 * bet, shoe, newPlayerCard :: playerCards, dealerCards) with StandS
+            }
+
         case Split =>
             if (cash < bet) {
                 println("Sorry, not enough money for split")
@@ -133,7 +163,7 @@ trait DealS extends Transition {
             else new State(copy()) with SplitS
 
         case _ =>
-            println("You can only press `hit`, `stand` or `split` at this phase")
+            println("You should press `hit`, `stand`, `double` or `split` at this phase")
             this
     }
 }

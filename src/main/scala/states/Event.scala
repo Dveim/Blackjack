@@ -1,7 +1,7 @@
 package states
 
 /**
- * Duplicate string input to objects to get some tips from compiler
+ * Converts string input to objects to get some tips from compiler
  */
 
 sealed trait Event
@@ -12,6 +12,7 @@ object Event {
         case "deal" => Deal
         case "hit" => Hit
         case "stand" => Stand
+        case "double" => Double
         case "split" => Split
         case _ => NotRecognized
     }
@@ -21,5 +22,6 @@ object Start extends Event
 object Deal extends Event
 object Hit extends Event
 object Stand extends Event
+object Double extends Event
 object Split extends Event
 object NotRecognized extends Event
