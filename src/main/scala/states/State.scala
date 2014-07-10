@@ -133,10 +133,10 @@ trait DealS extends Transition {
                 this
             }
 
-//            else if (getScore(playerCards) > 10) {
-//                println("Sorry, you can double only if score < 11")
-//                this
-//            }
+            else if (getScore(playerCards) > 10) {
+                println("Sorry, you can double only if score < 11")
+                this
+            }
 
             else if (!isAfterStart) {
                 println("Sorry, you can double only right after the start")
@@ -155,10 +155,10 @@ trait DealS extends Transition {
                 this
             }
 
-//            else if (playerCards.length != 2 || (playerCards(0).rank != playerCards(1).rank)) {
-//                println("Sorry, you can split only with two cards of same ranks")
-//                this
-//            }
+            else if (playerCards.length != 2 || (playerCards(0).rank != playerCards(1).rank)) {
+                println("Sorry, you can split only with two cards of same ranks")
+                this
+            }
 
             else if (!isAfterStart) {
                 println("Sorry, you can split only right after the start, multiple splits are not allowed")
