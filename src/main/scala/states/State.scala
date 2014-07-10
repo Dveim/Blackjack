@@ -133,14 +133,19 @@ trait DealS extends Transition {
                 this
             }
 
-            else if (getScore(playerCards) > 10) {
-                println("Sorry, you can double only if score < 11")
+//            else if (getScore(playerCards) > 10) {
+//                println("Sorry, you can double only if score < 11")
+//                this
+//            }
+
+            else if (!isAfterStart) {
+                println("Sorry, you can double only right after the start")
                 this
             }
 
             else {
                 val newPlayerCard = shoe.getCard
-                println(s"You get $newPlayerCard,  total score is ${getScore(newPlayerCard :: playerCards)}")
+                println(s"You get $newPlayerCard , total score is ${getScore(newPlayerCard :: playerCards)}")
                 new State(cash - bet, 2 * bet, shoe, newPlayerCard :: playerCards, dealerCards) with StandS
             }
 
@@ -150,10 +155,10 @@ trait DealS extends Transition {
                 this
             }
 
-            else if (playerCards.length != 2 || (playerCards(0).rank != playerCards(1).rank)) {
-                println("Sorry, you can split only with two cards of same ranks")
-                this
-            }
+//            else if (playerCards.length != 2 || (playerCards(0).rank != playerCards(1).rank)) {
+//                println("Sorry, you can split only with two cards of same ranks")
+//                this
+//            }
 
             else if (!isAfterStart) {
                 println("Sorry, you can split only right after the start, multiple splits are not allowed")
@@ -176,8 +181,14 @@ trait StandS extends Transition {
     override def _transit = {
         val dealerScore = getScore(dealerCards)
 
+        // check if player busted
+        if (getScore(playerCards) > 21) {
+            println("You busted")
+            new State(cash, 0, shoe, Nil, Nil) with StartS
+        }
+
         // dealer hits again
-        if (dealerScore < 17) {
+        else if (dealerScore < 17) {
             val dealerCard = shoe.getCard
             val newDealerCards = dealerCard :: dealerCards
             println(s"Dealer got $dealerCard , his new score is ${getScore(newDealerCards)}")

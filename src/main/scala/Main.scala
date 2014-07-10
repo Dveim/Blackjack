@@ -11,6 +11,7 @@ object Main {
         println(" - Ace values 11 if score < 11, else 1 (Ace + Ace + Ten == 22)")
         println(" - dealer can't blackjack")
         println(" - you can double if score < 11")
+        println(" - you can double only right after the start")
         println("Good luck!\n")
 
         var game: Transition = new State(100, 0, new Shoe(4), Nil, Nil) with StartS
